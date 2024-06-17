@@ -1,7 +1,21 @@
 # E-commerce Microservices System
 
 This repository contains a microservices-based e-commerce system built using Spring Boot.
+## Microservices
 
+1. **User Service**: Manages user registration and authentication.
+2. **Task Service**: Manages task creation, update, deletion, and filtering by status.
+
+## Features
+
+- User registration and authentication
+- Task creation, update, deletion
+- Task filtering by status
+- Form validation
+- Responsive design
+- Logging mechanisms
+- Unit tests for service methods
+  
 ## Services
 
 1. **User Authentication Service**
