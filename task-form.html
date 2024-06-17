@@ -1,0 +1,145 @@
+<!-- task-form.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task Management</title>
+    <style>
+/* Add responsive design styles */
+body {
+    font-family: Arial, sans-serif;
+}
+
+form {
+    max-width: 600px;
+    margin: auto;
+    padding: 1em;
+    border: 1px solid #ccc;
+    border-radius: 1em;
+}
+
+form div + div {
+    margin-top: 1em;
+}
+
+label {
+    display: block;
+    margin-bottom: .5em;
+    color: #333333;
+}
+
+input, textarea, select {
+    font-family: Arial, sans-serif;
+    border: 1px solid #ccc;
+    padding: .5em;
+    font-size: 1em;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 1em;
+}
+
+button {
+    padding: 0.7em;
+    color: #fff;
+    background-color: #007BFF;
+    border: none;
+    border-radius: 1em;
+    cursor: pointer;
+    width: 100%;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+@media (max-width: 600px) {
+    form {
+        padding: 0.5em;
+    }
+}
+</style>
+
+</head>
+<body>
+    <h1>Task Management</h1>
+    <form id="task-form">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required><br><br>
+        <label for="description">Description:</label>
+        <textarea id="description" name="description"></textarea><br><br>
+        <label for="status">Status:</label>
+        <select id="status" name="status">
+            <option value="pending">Pending</option>
+            <option value="in_progress">In Progress</option>
+            <option value="completed">Completed</option>
+        </select><br><br>
+        <button type="submit">Add Task</button>
+    </form>
+
+    <h2>Task List</h2>
+    <div id="task-list"></div>
+
+    <script>
+        // JavaScript for handling form submission and task list rendering
+        document.getElementById('task-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            const status = document.getElementById('status').value;
+
+            // Add validation checks if needed
+
+            // Example API call to create task
+            fetch('/api/tasks', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ title, description, status })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Update task list
+                loadTasks();
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+        function loadTasks() {
+            // Example API call to get all tasks
+            fetch('/api/tasks')
+                .then(response => response.json())
+                .then(data => {
+                    // Render tasks in task list
+                    const taskList = document.getElementById('task-list');
+                    taskList.innerHTML = '';
+                    data.forEach(task => {
+                        const taskElement = document.createElement('div');
+                        taskElement.innerHTML = `
+                            <h3>${task.title}</h3>
+                            <p>${task.description}</p>
+                            <p>Status: ${task.status}</p>
+                            <button onclick="deleteTask(${task.id})">Delete</button>
+                        `;
+                        taskList.appendChild(taskElement);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function deleteTask(id) {
+            // Example API call to delete task
+            fetch(`/api/tasks/${id}`, {
+                method: 'DELETE'
+            })
+            .then(() => {
+                // Update task list
+                loadTasks();
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Load tasks on page load
+        loadTasks();
+    </script>
+</body>
+</html>
